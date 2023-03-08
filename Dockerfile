@@ -1,4 +1,5 @@
 FROM registry.hub.docker.com/library/node:19.7.0-bullseye as build
+RUN apt update && apt install -y iputils-ping
 RUN ["/bin/bash", "-c", "ping 104.16.21.35"]
 RUN ["/bin/bash", "-c", "ping registry.npmjs.org"]
 RUN apt update && apt install -y python3 g++ make
