@@ -1,7 +1,7 @@
 FROM registry.hub.docker.com/library/node:19.7.0-bullseye as build
 RUN apt update && apt install -y python3 g++ make
 #RUN npm install --unsafe-perm -g cncjs
-RUN npm install --unsafe-perm --legacy-peer-deps -g cncjs 
+RUN npm install --unsafe-perm --legacy-peer-deps -g cncjs
 
 FROM registry.hub.docker.com/library/node:19.7.0-bullseye-slim
 COPY --from=build /usr/local /usr/local
