@@ -3,6 +3,10 @@
     {
       "comName": "/dev/tty.esplink",
       "manufacturer": "ESP LINK"
+    },
+    {
+      "comName": "/dev/ttyAMA0",
+      "manufacturer": ""
     }
   ],
   "commands": [
