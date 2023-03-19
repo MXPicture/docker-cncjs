@@ -6,7 +6,7 @@
     },
     {
       "comName": "/dev/ttyAMA0",
-      "manufacturer": ""
+      "manufacturer": "test"
     }
   ],
   "commands": [
