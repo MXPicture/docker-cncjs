@@ -38,6 +38,7 @@ jobs:
         if: github.event_name != 'repository_dispatch'
         with:
           push: true
+          context: .
           tags: mxpicture/cncjs:${{ steps.extract_tag.outputs.tag }}
           build-args: "BASE_IMAGE_VERSION=${{ steps.extract_tag.outputs.tag }}"
           
@@ -47,5 +48,6 @@ jobs:
         if: github.event_name == 'repository_dispatch'
         with:
           push: true
+          context: .
           tags: mxpicture/cncjs:${{ github.event.client_payload.tag }}
           build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.tag }}"
