@@ -37,7 +37,7 @@ jobs:
         with:
           push: true
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/arm
           tags: mxpicture/cncjs:${{ steps.extract_tag.outputs.tag }}
           build-args: "BASE_IMAGE_VERSION=${{ steps.extract_tag.outputs.tag }}"
           
@@ -48,6 +48,6 @@ jobs:
         with:
           push: true
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/arm
           tags: mxpicture/cncjs:${{ github.event.client_payload.tag }}
           build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.tag }}"
