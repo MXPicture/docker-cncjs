@@ -1,7 +1,7 @@
 {
   "ports": [
     {
-      "comName": "/dev/tty.esplink",
+      "path": "/dev/tty.esplink",
       "manufacturer": "ESP LINK"
     }
   ],
@@ -17,6 +17,12 @@
     {
       "title": "Restart CNCjs",
       "commands": "pkill -f cncjs"
+    }
+  ],
+  "macros": [
+    {
+      "name": "testnew",
+      "content": "[posx]\n[posx]\n[posx]\n[posx]\n[posx]\n\n[posx]"
     }
   ]
 }
