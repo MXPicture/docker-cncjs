@@ -77,7 +77,7 @@ COPY --from=build-stage /tmp/build/cncjs /opt/cncjs
 WORKDIR /opt/cncjs
 EXPOSE 80
 CMD /opt/cncjs/entrypoint -H 0.0.0.0 -p 80:8000 -c /config/cncjs.json
-# todo replace entrypoint by starting cncjs via node --> I hope it'll work ...
+# todo replace entrypoint by starting cncjs via node --> I hope it'll work ... maybe 'node /path/to/server-cli -H 0.0.0.0 -p 80:8000 -c /config/cncjs.json'
 
 # EXPOSE 8000
 # ENTRYPOINT ["/opt/cncjs/entrypoint"]
