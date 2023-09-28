@@ -41,8 +41,8 @@ RUN mkdir -p "$BUILD_DIR" \
   && mkdir -p "$ARCHIVE_DIR" \
   && mkdir -p "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR" \
   && git ls-remote --tags https://github.com/cncjs/cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/cncjs/cncjs/archive/refs/tags/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME" \
-# todo add additional widgets and features
-# build dist
+  # todo add additional widgets and features
+  # build dist
   && tar -xvzf "$ARCHIVE_DIR/$ARCHIVE_NAME" --directory "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR" \
   && mv "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR/$(ls --color=none $ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR)" "$ARCHIVE_DIR/$ARCHIVE_BUILD_DIR" \
   && cd "$ARCHIVE_DIR/$ARCHIVE_BUILD_DIR" \
@@ -76,8 +76,8 @@ COPY --from=build-stage /tmp/build/cncjs /opt/cncjs
 
 WORKDIR /opt/cncjs
 EXPOSE 80
-CMD /opt/cncjs/entrypoint -H 0.0.0.0 -p 80:8000 -c /config/cncjs.json
-# todo replace entrypoint by starting cncjs via node --> I hope it'll work ... maybe 'node /path/to/server-cli -H 0.0.0.0 -p 80:8000 -c /config/cncjs.json'
+CMD [ "node", "server-cli.js", "-H 0.0.0.0", "-p 80", "-c /config/cncjs.json" ]
+# CMD /opt/cncjs/entrypoint -H 0.0.0.0 -p 80:8000 -c /config/cncjs.json
 
 # EXPOSE 8000
 # ENTRYPOINT ["/opt/cncjs/entrypoint"]
