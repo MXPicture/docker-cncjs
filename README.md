@@ -23,6 +23,7 @@ Build image locally
 Build without cache `docker build --no-cache --build-arg CACHEBUST=$(date +%s) .`
 
 Use image `docker run --privileged -p 80:8000 --config ~/config.json --detach --name cncjs mxpicture/cncjs:latest`
+Use image `docker run -d -p 80:80 --name test_cncjs1 test_cncjs`
 
 Util
 
@@ -46,3 +47,9 @@ Get last cncjs/cncjs version (get_last_cncjs_version.sh, also in dockerfile)
 16. Build `yarn build-prod`
 
 download all at once (Step 1 to 8): `git ls-remote --tags https://github.com/cncjs/cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/cncjs/cncjs/archive/refs/tags/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | xargs wget -O cncjs.tar.gz`
+
+if custom repo should be used replace 1 to 11 with the following:
+
+1. `git ls-remote --tags https://github.com/cncjs/cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/cncjs/cncjs/archive/refs/tags/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME"`
+2. todo
+3. todo

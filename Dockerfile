@@ -12,16 +12,23 @@ ENV ARCHIVE_NAME cncjs.tar.gz
 
 ARG CACHEBUST=1
 
+# ORIG: use original releases https://github.com/cncjs/cncjs
+# CUSTOM: use custom repo branch https://github.com/MXPicture/cncjs
+ARG MODE=CUSTOM
+
 RUN apt update && apt install -y python3 g++ make
 
 # download latest version
 RUN mkdir -p "$BUILD_DIR" \
-  && mkdir -p "$ARCHIVE_DIR" \
-  && mkdir -p "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR" \
-  && git ls-remote --tags https://github.com/cncjs/cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/cncjs/cncjs/archive/refs/tags/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME" \
-  # todo add additional widgets and features
-  # build dist
-  && tar -xvzf "$ARCHIVE_DIR/$ARCHIVE_NAME" --directory "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR" \
+  && mkdir -p "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR"
+
+RUN if [ "$MODE" = "CUSTOM" ] ; \
+    then $(git ls-remote --refs https://github.com/MXPicture/docker-cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/MXPicture/docker-cncjs/raw/v" $1-1000 "." $2-1000 "." $3-1000 "/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME") ; \
+    else $(git ls-remote --tags https://github.com/cncjs/cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/cncjs/cncjs/archive/refs/tags/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME") ; \
+  fi
+
+# build dist
+RUN tar -xvzf "$ARCHIVE_DIR/$ARCHIVE_NAME" --directory "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR" \
   && mv "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR/$(ls --color=none $ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR)" "$ARCHIVE_DIR/$ARCHIVE_BUILD_DIR" \
   && cd "$ARCHIVE_DIR/$ARCHIVE_BUILD_DIR" \
   && yarn install \
