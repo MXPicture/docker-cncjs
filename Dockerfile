@@ -14,7 +14,7 @@ ARG CACHEBUST=1
 
 # ORIG: use original releases https://github.com/cncjs/cncjs
 # CUSTOM: use custom repo branch https://github.com/MXPicture/cncjs
-ARG MODE=CUSTOM
+ARG MODE=ORIG
 
 RUN apt update && apt install -y python3 g++ make
 
