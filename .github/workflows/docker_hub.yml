@@ -14,6 +14,13 @@ on:
   repository_dispatch:
     types: [docker_hub] # github.event.client_payload.original_version
 
+  workflow_call:
+    inputs:
+      original_version:
+        description: "Original CNCjs version"
+        required: true
+        type: string
+
 jobs:
   docker:
     runs-on: ubuntu-latest
