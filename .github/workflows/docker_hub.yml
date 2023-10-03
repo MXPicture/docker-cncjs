@@ -5,6 +5,14 @@ on:
     tags: ["*"]
 
   workflow_dispatch:
+    inputs:
+      original_version:
+        description: "Original CNCjs version"
+        required: true
+        default: "v1.10.3"
+
+  repository_dispatch:
+    types: [docker_hub] # github.event.client_payload.original_version
 
 jobs:
   docker:
@@ -27,13 +35,13 @@ jobs:
       - name: Extract tag name
         shell: bash
         run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/*/})"
-        if: github.event_name != 'repository_dispatch'
+        if: ${{ (github.event_name != 'repository_dispatch') && (github.event_name != 'workflow_dispatch') }}
         id: extract_tag
 
       - name: Build and push (on push)
         id: docker_build_push
         uses: docker/build-push-action@v4
-        if: github.event_name != 'repository_dispatch'
+        if: ${{ (github.event_name != 'repository_dispatch') && (github.event_name != 'workflow_dispatch') }}
         with:
           push: true
           context: .
@@ -41,13 +49,24 @@ jobs:
           tags: mxpicture/cncjs:${{ steps.extract_tag.outputs.tag }},mxpicture/cncjs:latest
           build-args: "BASE_IMAGE_VERSION=${{ steps.extract_tag.outputs.tag }}"
 
-      - name: Build and push (on dispatch)
-        id: docker_build_dispatch
+      - name: Build and push (on repository_dispatch)
+        id: docker_build_repository_dispatch
         uses: docker/build-push-action@v4
         if: github.event_name == 'repository_dispatch'
         with:
           push: true
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm
-          tags: mxpicture/cncjs:${{ github.event.client_payload.tag }}
-          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.tag }}"
+          tags: mxpicture/cncjs:${{ github.event.client_payload.original_version }},mxpicture/cncjs:latest
+          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.original_version }}"
+
+      - name: Build and push (on workflow_dispatch)
+        id: docker_build_workflow_dispatch
+        uses: docker/build-push-action@v4
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          push: true
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm
+          tags: mxpicture/cncjs:${{ github.event.inputs.original_version }},mxpicture/cncjs:latest
+          build-args: "BASE_IMAGE_VERSION=${{ github.event.inputs.original_version }}"
