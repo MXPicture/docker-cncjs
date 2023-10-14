@@ -29,7 +29,7 @@ jobs:
             echo "process_id=${{ github.event.inputs.process_id }}" >> $GITHUB_OUTPUT
           fi
           echo "step=docker_hub" >> $GITHUB_OUTPUT
-      
+
       - name: Start CI Log
         run: |
           curl --location '${{ vars.FB_FUNCTION_URL }}' \
@@ -40,7 +40,9 @@ jobs:
               "step": "${{ steps.parameters.outputs.step }}",
               "start": true,
               "processId": "${{ steps.parameters.outputs.process_id }}",
-              "runId": ${{ github.run_id }}
+              "runId": ${{ github.run_id }},
+              "runStatus": "in_progress",
+              "runConclusion": "initial"
             }'
 
       - uses: actions/checkout@v4
@@ -71,7 +73,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm
           tags: mxpicture/cncjs:${{ steps.parameters.outputs.original_version }},mxpicture/cncjs:latest
           build-args: "BASE_IMAGE_VERSION=${{ steps.parameters.outputs.original_version }}"
-      
+
       - name: Stop CI Log
         run: |
           curl --location '${{ vars.FB_FUNCTION_URL }}' \
@@ -82,5 +84,7 @@ jobs:
               "step": "${{ steps.parameters.outputs.step }}",
               "start": false,
               "processId": "${{ steps.parameters.outputs.process_id }}",
-              "runId": ${{ github.run_id }}
+              "runId": ${{ github.run_id }},
+              "runStatus": "completed",
+              "runConclusion": "success"
             }'
