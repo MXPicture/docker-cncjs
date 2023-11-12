@@ -37,6 +37,9 @@ RUN tar -xvzf "$ARCHIVE_DIR/$ARCHIVE_NAME" --directory "$ARCHIVE_DIR/$ARCHIVE_PR
   && mv "$ARCHIVE_DIR/$ARCHIVE_BUILD_DIR/dist/cncjs" "$BUILD_DIR/cncjs" \
   && mv "$ARCHIVE_DIR/$ARCHIVE_BUILD_DIR/entrypoint" "$BUILD_DIR/cncjs/"
 
+# insert pendant
+RUN git clone https://github.com/MXPicture/cncjs-pendant-tinyweb "$BUILD_DIR/cncjs_pendant_tinyweb"
+
 WORKDIR $BUILD_DIR/cncjs
 RUN yarn --production
 
@@ -50,9 +53,8 @@ RUN apt update && apt install -y udev socat && apt clean
 VOLUME /config
 COPY cncjs.json /config/cncjs.json
 COPY --from=build /tmp/build/cncjs /opt/cncjs
-
-RUN git clone https://github.com/MXPicture/cncjs-pendant-tinyweb /opt/cncjs_pendant_tinyweb
+COPY --from=build /tmp/build/cncjs_pendant_tinyweb /opt/cncjs_pendant_tinyweb
 
 WORKDIR /opt/cncjs
 EXPOSE 80
-CMD /opt/cncjs/entrypoint -H 0.0.0.0 -p 80 -c /config/cncjs.json -m /pendant:/opt/cncjs_pendant_tinyweb
+CMD /opt/cncjs/entrypoint -H 0.0.0.0 -p 80 -c /config/cncjs.json -m /pendant:/opt/cncjs_pendant_tinyweb/src

@@ -21,10 +21,11 @@ Build image locally
 
 2. Deploy to Docker Hub `docker push mxpicture/cncjs:latest`
 
-Build without cache `docker build --no-cache --build-arg CACHEBUST=$(date +%s) .`
+Build without cache `docker build --no-cache --build-arg CACHEBUST=$(date +%s) -t mxpicture/cncjs:latest .`
 
-Use image `docker run --privileged -p 80:8000 --config ~/config.json --detach --name cncjs mxpicture/cncjs:latest`
+Use image `docker run --privileged -p 80:80 --config ~/config.json --detach --name cncjs mxpicture/cncjs:latest`
 Use image `docker run -d -p 80:80 --name test_cncjs1 test_cncjs`
+Use image `docker run -p 80:80 --detach --name cncjs mxpicture/cncjs:latest`
 
 Util
 
