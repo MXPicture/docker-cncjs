@@ -23,8 +23,8 @@ RUN mkdir -p "$BUILD_DIR" \
   && mkdir -p "$ARCHIVE_DIR/$ARCHIVE_PREPARE_DIR"
 
 RUN if [ "$MODE" = "CUSTOM" ] ; \
-    then $(git ls-remote --refs https://github.com/MXPicture/docker-cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/MXPicture/docker-cncjs/raw/v" $1-1000 "." $2-1000 "." $3-1000 "/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME") ; \
-    else $(git ls-remote --tags https://github.com/cncjs/cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/cncjs/cncjs/archive/refs/tags/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME") ; \
+  then $(git ls-remote --refs https://github.com/MXPicture/docker-cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/MXPicture/docker-cncjs/raw/v" $1-1000 "." $2-1000 "." $3-1000 "/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME") ; \
+  else $(git ls-remote --tags https://github.com/cncjs/cncjs | cut -f 2 | cut -d "/" -f 3 | awk -F'[v]' '/^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | awk -F'[/.]' '{print $1+1000 "." $2+1000 "." $3+1000}' | sort -r | awk -F'[/.]' '{print "https://github.com/cncjs/cncjs/archive/refs/tags/v" $1-1000 "." $2-1000 "." $3-1000 ".tar.gz"}' | head -n 1 | /usr/bin/xargs wget -O "$ARCHIVE_DIR/$ARCHIVE_NAME") ; \
   fi
 
 # build dist
@@ -51,6 +51,8 @@ VOLUME /config
 COPY cncjs.json /config/cncjs.json
 COPY --from=build /tmp/build/cncjs /opt/cncjs
 
+RUN git clone https://github.com/MXPicture/cncjs-pendant-tinyweb /opt/cncjs_pendant_tinyweb
+
 WORKDIR /opt/cncjs
 EXPOSE 80
-CMD /opt/cncjs/entrypoint -H 0.0.0.0 -p 80 -c /config/cncjs.json
+CMD /opt/cncjs/entrypoint -H 0.0.0.0 -p 80 -c /config/cncjs.json -m /pendant:/opt/cncjs_pendant_tinyweb
