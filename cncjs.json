@@ -32,5 +32,15 @@
       "name": "testnew",
       "content": "[posx]\n[posx]\n[posx]\n[posx]\n[posx]\n\n[posx]"
     }
+  ],
+  "mountPoints": [
+    {
+      "route": "/tiny",
+      "target": "/opt/cncjs_tinyweb/src"
+    },
+    {
+      "route": "/shopfloor",
+      "target": "/opt/cncjs_shopfloor/src"
+    }
   ]
 }
