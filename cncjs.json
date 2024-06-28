@@ -1,0 +1,46 @@
+{
+  "ports": [
+    {
+      "path": "/dev/tty.esplink",
+      "manufacturer": "ESP LINK"
+    }
+  ],
+  "commands": [
+    {
+      "title": "Reboot",
+      "commands": "sudo /sbin/reboot"
+    },
+    {
+      "title": "Shutdown",
+      "commands": "sudo /sbin/shutdown"
+    },
+    {
+      "title": "Restart CNCjs",
+      "commands": "pkill -f cncjs"
+    },
+    {
+      "title": "Start socat",
+      "commands": "/usr/bin/socat pty,link=/dev/tty.esplink,raw,echo=0 tcp:${ESPLINK}"
+    },
+    {
+      "title": "Stop socat",
+      "commands": "pkill -f socat"
+    }
+  ],
+  "macros": [
+    {
+      "name": "testnew",
+      "content": "[posx]\n[posx]\n[posx]\n[posx]\n[posx]\n\n[posx]"
+    }
+  ],
+  "mountPoints": [
+    {
+      "route": "/tiny",
+      "target": "/opt/cncjs_tinyweb/src"
+    },
+    {
+      "route": "/shopfloor",
+      "target": "/opt/cncjs_shopfloor/src"
+    }
+  ]
+}
